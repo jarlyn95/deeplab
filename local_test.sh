@@ -38,8 +38,8 @@ python "${WORK_DIR}"/model_test.py
 
 # Go to datasets folder and download PASCAL VOC 2012 segmentation dataset.
 DATASET_DIR="datasets"
-#cd "${WORK_DIR}/${DATASET_DIR}"
-#bash download_and_convert_voc2012.sh
+cd "${WORK_DIR}/${DATASET_DIR}"
+bash download_and_convert_voc2012.sh
 
 # Go back to original directory.
 cd "${CURRENT_DIR}"
@@ -69,7 +69,7 @@ cd "${CURRENT_DIR}"
 PASCAL_DATASET="${WORK_DIR}/${DATASET_DIR}/${PASCAL_FOLDER}/tfrecord"
 
 # Train 10 iterations.
-NUM_ITERATIONS=3
+NUM_ITERATIONS=10
 python "${WORK_DIR}"/train.py \
   --logtostderr \
   --train_split="trainval" \
@@ -105,22 +105,6 @@ python "${WORK_DIR}"/eval.py \
   --dataset_dir="${PASCAL_DATASET}" \
   --max_number_of_evaluations=1
 
-# Visualize the results.
-python "${WORK_DIR}"/vis.py \
-  --logtostderr \
-  --vis_split="val" \
-  --model_variant="xception_65" \
-  --atrous_rates=6 \
-  --atrous_rates=12 \
-  --atrous_rates=18 \
-  --output_stride=16 \
-  --decoder_output_stride=4 \
-  --vis_crop_size="513,513" \
-  --checkpoint_dir="${TRAIN_LOGDIR}" \
-  --vis_logdir="${VIS_LOGDIR}" \
-  --dataset_dir="${PASCAL_DATASET}" \
-  --max_number_of_iterations=1
-
 # Export the trained checkpoint.
 CKPT_PATH="${TRAIN_LOGDIR}/model.ckpt-${NUM_ITERATIONS}"
 EXPORT_PATH="${EXPORT_DIR}/frozen_inference_graph.pb"
@@ -139,6 +123,3 @@ python "${WORK_DIR}"/export_model.py \
   --crop_size=513 \
   --crop_size=513 \
   --inference_scales=1.0
-
-## Run inference with the exported checkpoint.
-## Please refer to the provided deeplab_demo.ipynb for an example.
