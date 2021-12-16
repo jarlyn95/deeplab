@@ -26,9 +26,6 @@
 # Exit immediately if a command exits with a non-zero status.
 set -e
 
-# Move one-level up to tensorflow/models/research directory.
-cd ..
-
 # Update PYTHONPATH.
 export PYTHONPATH=$PYTHONPATH:`pwd`:`pwd`/slim
 
@@ -41,8 +38,8 @@ python "${WORK_DIR}"/model_test.py
 
 # Go to datasets folder and download PASCAL VOC 2012 segmentation dataset.
 DATASET_DIR="datasets"
-cd "${WORK_DIR}/${DATASET_DIR}"
-bash download_and_convert_voc2012.sh
+#cd "${WORK_DIR}/${DATASET_DIR}"
+#bash download_and_convert_voc2012.sh
 
 # Go back to original directory.
 cd "${CURRENT_DIR}"
@@ -72,7 +69,7 @@ cd "${CURRENT_DIR}"
 PASCAL_DATASET="${WORK_DIR}/${DATASET_DIR}/${PASCAL_FOLDER}/tfrecord"
 
 # Train 10 iterations.
-NUM_ITERATIONS=10
+NUM_ITERATIONS=3
 python "${WORK_DIR}"/train.py \
   --logtostderr \
   --train_split="trainval" \
@@ -143,5 +140,5 @@ python "${WORK_DIR}"/export_model.py \
   --crop_size=513 \
   --inference_scales=1.0
 
-# Run inference with the exported checkpoint.
-# Please refer to the provided deeplab_demo.ipynb for an example.
+## Run inference with the exported checkpoint.
+## Please refer to the provided deeplab_demo.ipynb for an example.
